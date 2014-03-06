@@ -69,7 +69,7 @@ public class RedisAppender extends AppenderSkeleton implements Runnable {
 
 			if (key == null) throw new IllegalStateException("Must set 'key'");
 
-			if (executor == null) executor = Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory(this.getClass().getSimpleName()));
+			if (executor == null) executor = Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory(this.getClass().getSimpleName(), true));
 
 			if (task != null && !task.isDone()) task.cancel(true);
 
