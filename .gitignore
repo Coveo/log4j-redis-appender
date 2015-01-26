@@ -1,5 +1,7 @@
 .DS_Store
 .classpath
+.idea/
 .project
 .settings/
+redis-appender.iml
 target/
