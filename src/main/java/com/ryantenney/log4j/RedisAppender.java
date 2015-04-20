@@ -51,7 +51,6 @@ public class RedisAppender extends AppenderSkeleton implements Runnable {
 	private long period = 500;
 	private boolean alwaysBatch = true;
 	private boolean purgeOnFailure = true;
-	private boolean daemonThread = true;
 
 	private int messageIndex = 0;
 	private Queue<LoggingEvent> events;
@@ -227,10 +226,6 @@ public class RedisAppender extends AppenderSkeleton implements Runnable {
 
 	public void setAlwaysBatch(boolean alwaysBatch) {
 		this.alwaysBatch = alwaysBatch;
-	}
-
-	public void setDaemonThread(boolean daemonThread){
-		this.daemonThread = daemonThread;
 	}
 
 	public boolean requiresLayout() {

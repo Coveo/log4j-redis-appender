@@ -37,7 +37,7 @@ public class FailoverRedisAppender extends RedisAppender {
             this.shuffled = new HostPort[endpointList.length];
             for (int h = 0; h < endpointList.length; h++) {
                 String[] hostport = endpointList[h].split(":");
-                this.shuffled[h] = new HostPort(hostport[0], Integer.valueOf(hostport[1]));
+                this.shuffled[h] = new HostPort(hostport[0], Integer.parseInt(hostport[1]));
             }
             this.shuffle(shuffled);
             super.activateOptions();
