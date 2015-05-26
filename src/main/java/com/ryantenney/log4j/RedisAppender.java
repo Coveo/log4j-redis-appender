@@ -147,7 +147,7 @@ public class RedisAppender extends AppenderSkeleton implements Runnable {
 			}
 			return true;
 		} catch (Exception e) {
-			LogLog.error("Error connecting to Redis: " + host + ":" + port);
+			LogLog.error("Error connecting to Redis: " + host + ":" + port, e);
 			return false;
 		}
 	}
