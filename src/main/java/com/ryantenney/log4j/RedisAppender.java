@@ -51,6 +51,7 @@ public class RedisAppender extends AppenderSkeleton implements Runnable {
 	private long period = 500;
 	private boolean alwaysBatch = true;
 	private boolean purgeOnFailure = true;
+	private long waitTerminate = 1000;
 
 	private int messageIndex = 0;
 	private Queue<LoggingEvent> events;
@@ -115,6 +116,19 @@ public class RedisAppender extends AppenderSkeleton implements Runnable {
 		try {
 			task.cancel(false);
 			executor.shutdown();
+			
+			boolean finished = executor.awaitTermination(waitTerminate, TimeUnit.MILLISECONDS);
+			if (finished) {
+				// We finished successfully, process any events in the queue if any still remain.
+				if (!events.isEmpty())
+					run();
+				// Flush any remainder regardless of the alwaysBatch flag.
+				if (messageIndex > 0)
+					push();
+			} else {
+				LogLog.warn("Executor did not complete in " + waitTerminate + " milliseconds. Log entries may be lost.");
+			}
+			
 			jedis.disconnect();
 		} catch (Exception e) {
 			errorHandler.error(e.getMessage(), e, ErrorCode.CLOSE_FAILURE);
@@ -228,8 +242,11 @@ public class RedisAppender extends AppenderSkeleton implements Runnable {
 		this.alwaysBatch = alwaysBatch;
 	}
 
+	public void setWaitTerminate(long waitTerminate) {
+		this.waitTerminate = waitTerminate;
+	}
+	
 	public boolean requiresLayout() {
 		return true;
 	}
-
 }
